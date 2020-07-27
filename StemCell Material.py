@@ -73,6 +73,16 @@ def DefaultMaterial(material_name, texture_path, material_type):
     roughness_shader [c4d.BITMAPSHADER_WHITEPOINT] = 0
     material.InsertShader (roughness_shader)
     material[c4d.REFLECTION_LAYER_MAIN_SHADER_ROUGHNESS + reflection_layer] = roughness_shader
+    
+    #Alpha
+    if (material_type == 1):
+        material[c4d.MATERIAL_USE_ALPHA] = 1
+        alpha_shader = c4d.BaseList2D (c4d.Xbitmap)
+        alpha_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + material_name + '_Metallic.png'
+        alpha_shader [c4d.BITMAPSHADER_INTERPOLATION] = 0
+        alpha_shader [c4d.BITMAPSHADER_COLORPROFILE] = 2
+        material[c4d.MATERIAL_ALPHA_SHADER] = alpha_shader
+        material.InsertShader (alpha_shader)
 
     return material
 
@@ -137,7 +147,7 @@ def Transparency(material, material_name, texture_path, refraction):
     return material
 
 def AddTag(material):
-    
+
     tag = doc.GetActiveObject().MakeTag(c4d.Ttexture)
     doc.AddUndo(c4d.UNDOTYPE_NEW, tag)
     tag[c4d.TEXTURETAG_PROJECTION] = 6
@@ -260,6 +270,14 @@ class DialogWindow(gui.GeDialog):
 
         #Apply
         if (id == 12):
+            #Conductor Material
+            if (self.GetBool(7) == True):
+                conductor_material = DefaultMaterial(self.GetString(1), self.GetString(2), 1)
+                if (self.GetBool(8) == True):
+                    ConductorIOR(conductor_material, self.GetFloat(9))
+                if (self.GetBool(23) == True) and (doc.GetActiveObject() != None):
+                    AddTag(conductor_material)
+            
             #Dielectric Material
             if (self.GetBool(4) == True):
                 dielectric_material = DefaultMaterial(self.GetString(1), self.GetString(2), 0)
@@ -268,20 +286,10 @@ class DialogWindow(gui.GeDialog):
                 if (self.GetBool(23) == True) and (doc.GetActiveObject() != None):
                     AddTag(dielectric_material)
 
-            #Conductor Material
-            if (self.GetBool(7) == True):
-                conductor_material = DefaultMaterial(self.GetString(1), self.GetString(2), 1)
-                if (self.GetBool(8) == True):
-                    ConductorIOR(conductor_material, self.GetFloat(9))
-                if (self.GetBool(23) == True) and (doc.GetActiveObject() != None):
-                    AddTag(conductor_material)
-
             #Transparent Material
             if (self.GetBool(10) == True):
                 transparent_material = DefaultMaterial(self.GetString(1), self.GetString(2), 2)
                 Transparency(transparent_material, self.GetString(1), self.GetString(2), self.GetFloat(11))
-                if (self.GetBool(23) == True) and (doc.GetActiveObject() != None):
-                    AddTag(transparent_material)
 
             c4d.EventAdd()
             self.Close()
