@@ -1,19 +1,19 @@
 import c4d
 from c4d import gui
 
-def DefaultMaterial(material_name, texture_path, material_type):
+def DefaultMaterial(texture_set_name, texture_path, material_type):
 
     #Material
     material = c4d.Material(c4d.Mbase)
 
     if (material_type == 0):
-        material.SetName(material_name + "_Dielectric_Material")
+        material.SetName(texture_set_name + "_Dielectric_Material")
 
     if (material_type == 1):
-        material.SetName(material_name + "_Conductor_Material")
+        material.SetName(texture_set_name + "_Conductor_Material")
 
     if (material_type == 2):
-        material.SetName(material_name + "_Transparent_Material")
+        material.SetName(texture_set_name + "_Transparent_Material")
 
     doc.InsertMaterial(material)
     doc.AddUndo(c4d.UNDOTYPE_NEW, material)
@@ -27,7 +27,7 @@ def DefaultMaterial(material_name, texture_path, material_type):
     #Diffuse
     material[c4d.MATERIAL_COLOR_COLOR] = c4d.Vector(1)
     diffuse_shader = c4d.BaseList2D (c4d.Xbitmap)
-    diffuse_shader[c4d.BITMAPSHADER_FILENAME] = texture_path + material_name + '_Diffuse.png'
+    diffuse_shader[c4d.BITMAPSHADER_FILENAME] = texture_path + texture_set_name + '_Diffuse.png'
     diffuse_shader [c4d.BITMAPSHADER_INTERPOLATION] = 0
     diffuse_shader [c4d.BITMAPSHADER_COLORPROFILE] = 2
     material.InsertShader(diffuse_shader)
@@ -37,7 +37,7 @@ def DefaultMaterial(material_name, texture_path, material_type):
     material[c4d.MATERIAL_USE_NORMAL] = 1
     material[c4d.MATERIAL_NORMAL_REVERSEY] = 1
     normal_shader = c4d.BaseList2D (c4d.Xbitmap)
-    normal_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + material_name + '_Normal.png'
+    normal_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + texture_set_name + '_Normal.png'
     normal_shader [c4d.BITMAPSHADER_INTERPOLATION] = 0
     normal_shader [c4d.BITMAPSHADER_COLORPROFILE] = 1
     material.InsertShader(normal_shader)
@@ -58,7 +58,7 @@ def DefaultMaterial(material_name, texture_path, material_type):
 
     #Specular Shader
     specular_shader = c4d.BaseList2D (c4d.Xbitmap)
-    specular_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + material_name + '_Specular.png'
+    specular_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + texture_set_name + '_Specular.png'
     specular_shader [c4d.BITMAPSHADER_INTERPOLATION] = 0
     specular_shader [c4d.BITMAPSHADER_COLORPROFILE] = 2
     material.InsertShader (specular_shader)
@@ -66,7 +66,7 @@ def DefaultMaterial(material_name, texture_path, material_type):
 
     #Roughness Shader
     roughness_shader = c4d.BaseList2D (c4d.Xbitmap)
-    roughness_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + material_name + '_Glossiness.png'
+    roughness_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + texture_set_name + '_Glossiness.png'
     roughness_shader [c4d.BITMAPSHADER_INTERPOLATION] = 0
     roughness_shader [c4d.BITMAPSHADER_COLORPROFILE] = 1
     roughness_shader [c4d.BITMAPSHADER_BLACKPOINT] = 1
@@ -78,7 +78,7 @@ def DefaultMaterial(material_name, texture_path, material_type):
     if (material_type == 1):
         material[c4d.MATERIAL_USE_ALPHA] = 1
         alpha_shader = c4d.BaseList2D (c4d.Xbitmap)
-        alpha_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + material_name + '_Metallic.png'
+        alpha_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + texture_set_name + '_Metallic.png'
         alpha_shader [c4d.BITMAPSHADER_INTERPOLATION] = 0
         alpha_shader [c4d.BITMAPSHADER_COLORPROFILE] = 2
         material[c4d.MATERIAL_ALPHA_SHADER] = alpha_shader
@@ -106,7 +106,7 @@ def ConductorIOR(material, ior):
 
     return material
 
-def Transparency(material, material_name, texture_path, refraction):
+def Transparency(material, texture_set_name, texture_path, refraction):
 
     #Local Texture Path
     if (texture_path == doc.GetDocumentPath()):
@@ -136,7 +136,7 @@ def Transparency(material, material_name, texture_path, refraction):
 
     #Roughness Shader
     roughness_shader = c4d.BaseList2D (c4d.Xbitmap)
-    roughness_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + material_name + '_Glossiness.png'
+    roughness_shader [c4d.BITMAPSHADER_FILENAME] = texture_path + texture_set_name + '_Glossiness.png'
     roughness_shader [c4d.BITMAPSHADER_INTERPOLATION] = 0
     roughness_shader [c4d.BITMAPSHADER_COLORPROFILE] = 1
     roughness_shader [c4d.BITMAPSHADER_BLACKPOINT] = 1
