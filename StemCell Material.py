@@ -270,6 +270,8 @@ class DialogWindow(gui.GeDialog):
 
         #Apply
         if (id == 12):
+            doc.StartUndo()
+            
             #Conductor Material
             if (self.GetBool(7) == True):
                 conductor_material = DefaultMaterial(self.GetString(1), self.GetString(2), 1)
@@ -291,6 +293,7 @@ class DialogWindow(gui.GeDialog):
                 transparent_material = DefaultMaterial(self.GetString(1), self.GetString(2), 2)
                 Transparency(transparent_material, self.GetString(1), self.GetString(2), self.GetFloat(11))
 
+            doc.EndUndo()
             c4d.EventAdd()
             self.Close()
 
